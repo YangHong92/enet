@@ -45,8 +45,7 @@ class InitialBlock(nn.Module):
         # the extension branch
         self.main_branch = nn.Conv2d(
             in_channels,
-            out_channels,
-            # out_channels - 3,
+            out_channels - 3,
             kernel_size=kernel_size,
             stride=2,
             padding=padding,
@@ -63,13 +62,13 @@ class InitialBlock(nn.Module):
 
     def forward(self, x):
         main = self.main_branch(x)
-        # ext = self.ext_branch(x)
+        ext = self.ext_branch(x)
 
         # Concatenate branches
-        # out = torch.cat((main, ext), 1)
+        out = torch.cat((main, ext), 1)
 
         # Apply batch normalization
-        out = self.batch_norm(main)
+        out = self.batch_norm(out)
 
         return self.out_prelu(out)
 
@@ -163,16 +162,16 @@ class RegularBottleneck(nn.Module):
                     internal_channels,
                     kernel_size=(kernel_size, 1),
                     stride=1,
-                    padding=(padding, 0),
-                    dilation=dilation,
+                    padding=(2, 0),
+                    dilation=1,
                     bias=bias), nn.BatchNorm2d(internal_channels), activation,
                 nn.Conv2d(
                     internal_channels,
                     internal_channels,
                     kernel_size=(1, kernel_size),
                     stride=1,
-                    padding=(0, padding),
-                    dilation=dilation,
+                    padding=(0, 2),
+                    dilation=1,
                     bias=bias), nn.BatchNorm2d(internal_channels), activation)
         else:
             self.ext_conv2 = nn.Sequential(
@@ -181,8 +180,8 @@ class RegularBottleneck(nn.Module):
                     internal_channels,
                     kernel_size=kernel_size,
                     stride=1,
-                    padding=padding,
-                    dilation=dilation,
+                    padding=1,
+                    dilation=1,
                     bias=bias), nn.BatchNorm2d(internal_channels), activation)
 
         # 1x1 expansion convolution

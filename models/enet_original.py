@@ -45,8 +45,7 @@ class InitialBlock(nn.Module):
         # the extension branch
         self.main_branch = nn.Conv2d(
             in_channels,
-            out_channels,
-            # out_channels - 3,
+            out_channels - 3,
             kernel_size=kernel_size,
             stride=2,
             padding=padding,
@@ -63,13 +62,13 @@ class InitialBlock(nn.Module):
 
     def forward(self, x):
         main = self.main_branch(x)
-        # ext = self.ext_branch(x)
+        ext = self.ext_branch(x)
 
         # Concatenate branches
-        # out = torch.cat((main, ext), 1)
+        out = torch.cat((main, ext), 1)
 
         # Apply batch normalization
-        out = self.batch_norm(main)
+        out = self.batch_norm(out)
 
         return self.out_prelu(out)
 

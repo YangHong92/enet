@@ -201,7 +201,7 @@ class RegularBottleneck(nn.Module):
 
     def forward(self, x):
         # Main branch shortcut
-        main = x
+        # main = x
 
         # Extension branch
         ext = self.ext_conv1(x)
@@ -210,9 +210,9 @@ class RegularBottleneck(nn.Module):
         ext = self.ext_regul(ext)
 
         # Add main and extension branches
-        out = main + ext
+        # out = main + ext
 
-        return self.out_prelu(out)
+        return self.out_prelu(ext)
 
 
 class DownsamplingBottleneck(nn.Module):
